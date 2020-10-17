@@ -3,11 +3,8 @@ let rows = 50;
 
 let isPlaying = false;
 
-// let grid = new Array(rows);
-// let nextGrid = new Array(rows);
-// Testing this as I read somewhere that these are better
-let grid = [rows];
-let nextGrid = [rows];
+ let grid = new Array(rows).fill(0);
+ let nextGrid = new Array(rows).fill(0);
 
 let timer;
 let speedOfReproduction = 100;
