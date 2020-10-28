@@ -6,15 +6,15 @@ body {
 
 table {
     background-color: #fff;
-    border: 2px solid #111;
+    border: 1px solid #111;
     border-spacing: 0;
     margin: 15px auto auto;
 }
 
 td {
     border: 1px solid #001;
-    width: 15px;
-    height: 20px;
+    width: 9px;
+    height: 9px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;

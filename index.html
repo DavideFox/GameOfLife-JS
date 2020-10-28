@@ -3,22 +3,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet">
-
 
     <title>Game of Life</title>
 </head>
 <body>
-    <h1>Game of Life</h1>
-
-    <div id = "buttons">
-        <button style="background-color: #1ceb23" id="start" onclick="startButtonHandler(this)">START</button>
-        <button style="background-color: #f14e4e" onclick="clearButton()">CLEAR</button>
-        <button style="background-color: #4e9af1" onclick="randomButton()">RANDOM</button>
+<div class="container-fluid">
+    <div class="row justify-content-between">
+        <div class="col">
+            <div id = "grid">
+            </div>
+        </div>
+        <div class="col col-sm-2">
+            <h1>Game of Life</h1>
+            <div class="row justify-content-between">
+                <div id = "buttons">
+                    <button style="background-color: #1ceb23" id="start" onclick="startButtonHandler()">START</button>
+                    <button style="background-color: #f14e4e" onclick="clearButton()">CLEAR</button>
+                    <button style="background-color: #4e9af1" onclick="randomButton()">RANDOM</button>
+                </div>
+            </div>
+            <div class="slidecontainer">
+                <label for="gameSpeed" id="gameSpeedLabel">Time Between Cycles: 50</label>
+                <input type="range" min="50" max="150" value="100" class="gameSpeedSlider" id="gameSpeed">
+            </div>
+            <div >
+                <p id="cycleCounter">Cycle: 0</p>
+            </div>
+        </div>
     </div>
-
-    <div id = "grid">
-    </div>
+</div>
 </body>
 <script src="gameOfLife.js"></script>
 </html>

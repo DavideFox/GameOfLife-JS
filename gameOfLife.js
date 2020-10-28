@@ -1,10 +1,10 @@
-let cols = 50;
-let rows = 50;
+let cols = 90;
+let rows = 90;
 
 let isPlaying = false;
 
-let grid = new Array(rows).fill(0);
-let nextGrid = new Array(rows).fill(0);
+let grid = new Array(rows);
+let nextGrid = new Array(rows);
 
 let timer;
 let speedOfReproduction = 100;
@@ -16,12 +16,32 @@ let speedOfReproduction = 100;
 window.onload = () => {
     console.log("Init app...");
     createTable();
-    initGrids();}
+    initGrids();
+    resetGrids();
+}
 
 function initGrids() {
     for (let i = 0; i < rows; i++) {
-        grid[i] = [cols];
-        nextGrid[i] = [cols];
+        grid[i] = new Array(cols);
+        nextGrid[i] = new Array(cols);
+    }
+}
+
+function resetGrids() {
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            grid[i][j] = 0;
+            nextGrid[i][j] = 0;
+        }
+    }
+}
+
+function copyAndResetGrid() {
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            grid[i][j] = nextGrid[i][j];
+            nextGrid[i][j] = 0;
+        }
     }
 }
 
@@ -43,6 +63,16 @@ function createTable() {
         table.appendChild(tr);
     }
     gridContainer.appendChild(table);
+}
+
+// Slider for speed selection
+let slider = document.getElementById("gameSpeed");
+let output = document.getElementById("gameSpeedLabel");
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    output.innerHTML = "Time Between Cycles: " + slider.value;
+    speedOfReproduction = this.value;
 }
 
 /*
@@ -76,31 +106,38 @@ function changeCell(obj){
     }
 }
 
+// Buggato, ma non capisco perché
 function updateView() {
+    console.log("Updating view")
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             let cell = document.getElementById(i + "-" + j);
             if (grid[i][j] === 0) {
+                console.log("Cell is dead")
                 cell.setAttribute("class", "dead");
             } else {
+                console.log("Cell is alive")
                 cell.setAttribute("class", "alive");
             }
         }
     }
 }
 
+
+
 /*
 * CONTROLS
 * Methods to setup controls
  */
+let startBtn = document.getElementById('start');
+
 function randomButton() {
     console.log("Randomizing")
-    //if (playing) return;
     clearButton();
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-            let isAlive = Math.round(Math.random());
-            if (isAlive === 1) {
+            let isAlive = Math.random() < 0.3
+            if (isAlive) {
                 let cell = document.getElementById(i + "-" + j);
                 cell.setAttribute("class", "alive");
                 grid[i][j] = 1;
@@ -110,7 +147,14 @@ function randomButton() {
 }
 
 function clearButton(){
-    clearTimeout(timer);
+    counter = 0;
+    if (isPlaying) {
+        isPlaying = false;
+        console.log("Stop the game  ");
+        startBtn.innerHTML = "START";
+        startBtn.style.backgroundColor = '#1ceb23';
+        clearTimeout(timer);
+    }
 
     let cellsNodeList = document.getElementsByClassName("alive");
     let cells = [];
@@ -123,20 +167,82 @@ function clearButton(){
     }
     grid.fill(0);
     nextGrid.fill(0);
+
+    initGrids()
+    resetGrids()
+    updateView()
 }
 
-function startButtonHandler(startButton){
+function startButtonHandler(){
     if (isPlaying) {
-        console.log("Stop the game  " + this);
+        console.log("Stop the game  ");
         isPlaying = false;
-        startButton.innerHTML = "START";
-        startButton.style.backgroundColor = '#1ceb23';
+        startBtn.innerHTML = "START";
+        startBtn.style.backgroundColor = '#1ceb23';
         clearTimeout(timer);
+
     } else {
         console.log("Start the game");
         isPlaying = true;
-        startButton.innerHTML = "STOP";
-        startButton.style.backgroundColor = '#ff6d12';
-        //play();
+        startBtn.innerHTML = "STOP";
+        startBtn.style.backgroundColor = '#ff6d12';
+        play();
     }
+}
+
+// Gameplay
+function play(){
+    if (isPlaying){
+        calcNextGen();
+        console.log("Playing");
+        setTimeout(play, speedOfReproduction);
+    }
+}
+
+function calcNextGen() {
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            checkCell(i, j);
+        }
+    }
+    updateCounter()
+    // checkCell works on a "future" grid, so we have to make that grid the current one
+    copyAndResetGrid();
+    updateView();
+}
+
+let counterEl = document.getElementById('cycleCounter')
+let counter = 0;
+function updateCounter(){
+    counterEl.innerHTML = "Cycle: " + ++counter;
+}
+
+function checkCell(row, col){
+    let numNeighbors = countNeighbours(row, col);
+    if (grid[row][col] === 1) {
+        if (numNeighbors < 2) {
+            nextGrid[row][col] = 0;
+        } else if (numNeighbors === 2 || numNeighbors === 3) {
+            nextGrid[row][col] = 1;
+        } else if (numNeighbors > 3) {
+            nextGrid[row][col] = 0;
+        }
+    } else if (grid[row][col] === 0) {
+        if (numNeighbors === 3) {
+            nextGrid[row][col] = 1;
+        }
+    }
+}
+
+function countNeighbours(row, col){
+    let count = 0;
+    for (let x = row - 1; x <= row + 1; x++) {
+        for (let y = col - 1; y <= col + 1; y++) {
+            if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                count += grid[x][y] ? 1 : 0;
+            }
+        }
+    }
+    count -= grid[row][col] ? 1 : 0;
+    return count;
 }
