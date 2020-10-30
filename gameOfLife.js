@@ -14,7 +14,7 @@ let speedOfReproduction = 100;
 * Init method and basic constructors
 */
 window.onload = () => {
-    console.log("Init app...");
+    //console.log("Init app...");
     createTable();
     initGrids();
     resetGrids();
@@ -46,7 +46,7 @@ function copyAndResetGrid() {
 }
 
 function createTable() {
-    console.log("Creating the html table");
+    //console.log("Creating the html table");
     let gridContainer = document.getElementById('grid');
     let table = document.createElement("table");
     
@@ -108,15 +108,15 @@ function changeCell(obj){
 
 // Buggato, ma non capisco perché
 function updateView() {
-    console.log("Updating view")
+    //console.log("Updating view")
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             let cell = document.getElementById(i + "-" + j);
             if (grid[i][j] === 0) {
-                console.log("Cell is dead")
+                //console.log("Cell is dead")
                 cell.setAttribute("class", "dead");
             } else {
-                console.log("Cell is alive")
+                //console.log("Cell is alive")
                 cell.setAttribute("class", "alive");
             }
         }
@@ -132,7 +132,7 @@ function updateView() {
 let startBtn = document.getElementById('start');
 
 function randomButton() {
-    console.log("Randomizing")
+    //console.log("Randomizing")
     clearButton();
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
@@ -150,7 +150,7 @@ function clearButton(){
     counter = 0;
     if (isPlaying) {
         isPlaying = false;
-        console.log("Stop the game  ");
+        //console.log("Stop the game  ");
         startBtn.innerHTML = "START";
         startBtn.style.backgroundColor = '#1ceb23';
         clearTimeout(timer);
@@ -175,14 +175,14 @@ function clearButton(){
 
 function startButtonHandler(){
     if (isPlaying) {
-        console.log("Stop the game  ");
+        //console.log("Stop the game  ");
         isPlaying = false;
         startBtn.innerHTML = "START";
         startBtn.style.backgroundColor = '#1ceb23';
         clearTimeout(timer);
 
     } else {
-        console.log("Start the game");
+        //console.log("Start the game");
         isPlaying = true;
         startBtn.innerHTML = "STOP";
         startBtn.style.backgroundColor = '#ff6d12';
@@ -194,7 +194,7 @@ function startButtonHandler(){
 function play(){
     if (isPlaying){
         calcNextGen();
-        console.log("Playing");
+        //console.log("Playing");
         setTimeout(play, speedOfReproduction);
     }
 }
