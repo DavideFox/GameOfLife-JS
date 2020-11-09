@@ -14,10 +14,17 @@ let speedOfReproduction = 100;
 * Init method and basic constructors
 */
 window.onload = () => {
-    //console.log("Init app...");
+    init();
+}
+
+function init(){
     createTable();
     initGrids();
     resetGrids();
+}
+
+function deleteTable(){
+    document.getElementById('grid').removeChild(document.getElementById('grid').childNodes[1]);
 }
 
 function initGrids() {
@@ -46,7 +53,6 @@ function copyAndResetGrid() {
 }
 
 function createTable() {
-    //console.log("Creating the html table");
     let gridContainer = document.getElementById('grid');
     let table = document.createElement("table");
     
@@ -73,6 +79,14 @@ let output = document.getElementById("gameSpeedLabel");
 slider.oninput = function() {
     output.innerHTML = "Time Between Cycles: " + slider.value;
     speedOfReproduction = this.value;
+}
+
+let rowsSelection = document.getElementById('gameRowsCols');
+rowsSelection.onchange = () => {
+    rows = rowsSelection.value;
+    cols = rowsSelection.value;
+    deleteTable();
+    init();
 }
 
 /*
@@ -106,7 +120,6 @@ function changeCell(obj){
     }
 }
 
-// Buggato, ma non capisco perché
 function updateView() {
     //console.log("Updating view")
     for (let i = 0; i < rows; i++) {
@@ -123,8 +136,6 @@ function updateView() {
     }
 }
 
-
-
 /*
 * CONTROLS
 * Methods to setup controls
@@ -132,7 +143,6 @@ function updateView() {
 let startBtn = document.getElementById('start');
 
 function randomButton() {
-    //console.log("Randomizing")
     clearButton();
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
@@ -150,7 +160,6 @@ function clearButton(){
     counter = 0;
     if (isPlaying) {
         isPlaying = false;
-        //console.log("Stop the game  ");
         startBtn.innerHTML = "START";
         startBtn.style.backgroundColor = '#1ceb23';
         clearTimeout(timer);
@@ -175,14 +184,12 @@ function clearButton(){
 
 function startButtonHandler(){
     if (isPlaying) {
-        //console.log("Stop the game  ");
         isPlaying = false;
         startBtn.innerHTML = "START";
         startBtn.style.backgroundColor = '#1ceb23';
         clearTimeout(timer);
 
     } else {
-        //console.log("Start the game");
         isPlaying = true;
         startBtn.innerHTML = "STOP";
         startBtn.style.backgroundColor = '#ff6d12';
@@ -194,7 +201,6 @@ function startButtonHandler(){
 function play(){
     if (isPlaying){
         calcNextGen();
-        //console.log("Playing");
         setTimeout(play, speedOfReproduction);
     }
 }
@@ -206,7 +212,6 @@ function calcNextGen() {
         }
     }
     updateCounter()
-    // checkCell works on a "future" grid, so we have to make that grid the current one
     copyAndResetGrid();
     updateView();
 }
